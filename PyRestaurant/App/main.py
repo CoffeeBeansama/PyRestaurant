@@ -7,6 +7,7 @@ from player import Player
 from camera import CameraGroup
 from support import *
 from tile import Tile
+from ui import UI
 
 class Game:
     def __init__(self):
@@ -30,6 +31,8 @@ class Game:
         fontPath = "Fonts/DeterminationMonoWebRegular-Z5oq.ttf"
         self.fontColor = (255,255,255)
         self.fpsFont = pg.font.Font(fontPath,18)
+
+        self.ui = UI()
         
         pg.display.set_caption("PyRestaurant")
 
@@ -71,6 +74,7 @@ class Game:
 
             self.visibleSprites.custom_draw(self.player)
             self.player.update()
+            self.ui.renderUI()
 
             self.displayFPS()
             pg.display.update()
