@@ -62,12 +62,11 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.hitbox.center)
     
     def idleState(self):
-        self.direction.x = 0 
+        self.direction.x = 0
         self.direction.y = 0
-        
         if not "Idle" in self.state:
             self.state = f"Idle_{self.state}"
-    
+
     def handleVerticalMovement(self,value,state):
         self.direction.x = 0
         self.direction.y = value

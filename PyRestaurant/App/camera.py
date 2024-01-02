@@ -7,11 +7,9 @@ class CameraGroup(pg.sprite.Group):
         self.display_canvas = pg.display.get_surface()
         self.half_width = self.display_canvas.get_size()[0] // 2
         self.half_height = self.display_canvas.get_size()[1] // 2
-
-        
         self.foregroundSprite = pg.image.load("Sprites/level.png")
         self.foregroundRect = self.foregroundSprite.get_rect(topleft=(0,0))
-        
+
 
         self.internalSurfaceSize = (300, 300)
         self.internalSurface = pg.Surface(self.internalSurfaceSize, pg.SRCALPHA)
@@ -25,8 +23,6 @@ class CameraGroup(pg.sprite.Group):
 
         self.offset = pg.math.Vector2()
         self.textOffset = pg.math.Vector2()
-
-        
 
     def custom_draw(self, player):
         # getting the offset  for camera
