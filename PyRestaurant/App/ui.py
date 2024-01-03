@@ -69,6 +69,7 @@ class UI:
              if self.itemSlots[key]["Button"].collidepoint(mousePos):
                 if mousePressed[0] and not self.timer.activated:
                    print(f"Pressed the button on {key}")
+                   addOrder(key)
                    self.timer.activate()
              
 
