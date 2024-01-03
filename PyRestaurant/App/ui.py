@@ -1,7 +1,8 @@
 import pygame as pg
 from timer import Timer
 from support import loadSprite
-from models import Order
+from views import addOrder
+
 
 class UI:
     def __init__(self):
@@ -20,17 +21,24 @@ class UI:
         self.itemSlotPosX = 145
         self.itemSlotStartPosY = 70
         
+        self.itemSpriteXPos = 495
+
         self.slotWidth = 420
         self.slotHeight = 65
         
-        itemSpriteSize = (35,35)
+        itemSpriteSize = (60,60)
+
+        self.itemList = ["Burger","Bacon","Donut","Chocolate"]
         self.itemSlots = {}
-        for index,item in enumerate(["Burger","Bacon","Donut","Chocolate"]):
+
+        for index,item in enumerate(self.itemList):
             y = self.itemSlotStartPosY + (index * 85)
             
             self.itemSlots[item] = {}
             self.itemSlots[item]["Sprite"] = loadSprite(f"Sprites/{item.lower()}.png",itemSpriteSize).convert_alpha()
             self.itemSlots[item]["Y"] = y
+            white = (255,255,255)
+            self.itemSlots[item]["Text"] = self.font.render(f"Order: {str(item)}",True,white)
         
 
     def initializeButtonColours(self):
@@ -60,8 +68,6 @@ class UI:
 
              if self.itemSlots[key]["Button"].collidepoint(mousePos):
                 if mousePressed[0] and not self.timer.activated:
-                   newOrder = Order(name=item)
-                   newOrder.save()
                    print(f"Pressed the button on {key}")
                    self.timer.activate()
              
@@ -96,8 +102,15 @@ class UI:
             # background
             pg.draw.rect(self.screen,invBGColor,(self.itemSlotPosX,item["Y"],self.slotWidth,self.slotHeight))
             # slots
-            self.itemSlots[key]["Button"] = pg.draw.rect(self.screen,invColor,(self.itemSlotPosX+5,item["Y"]+5,self.slotWidth-10,self.slotHeight-10))
-
+            self.itemSlots[key]["Button"] = pg.draw.rect(self.screen,invColor,
+                                            (self.itemSlotPosX+5,item["Y"]+5,
+                                            self.slotWidth-10,self.slotHeight-10))
+            # text
+            self.screen.blit(item["Text"],(self.itemSlotPosX+20,item["Y"]+10))
+            
+            # sprite
+            self.screen.blit(item["Sprite"],(self.itemSpriteXPos,item["Y"]))
+            
     def renderUI(self):
         self.timer.update()
         self.renderPurchaseButton()
