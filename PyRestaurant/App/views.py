@@ -6,16 +6,26 @@ from django.urls import reverse
 import os
 import sys
 import django
-django_project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', ''))
-sys.path.append(django_project_path)
 
+django_project_path = os.path.join(os.path.dirname(__file__), '..', '')
+sys.path.append(django_project_path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyRestaurant.settings")
 django.setup()
+
 from App.models import Order
 
 # Create your views here.
 def greet(request):
     return HttpResponse(loader.get_template("html/greet.html").render({},request))
+
+def homePage(request):
+    orders = Order.objects.all().values()
+    template = loader.get_template("html/home.html")
+    context = {
+        "orders" : orders
+    }
+    return HttpResponse(template.render(context,request))
+
 
 def addOrder(orderName):
     newOrder = Order(name=orderName)
