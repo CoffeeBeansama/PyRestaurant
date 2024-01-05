@@ -8,6 +8,7 @@ from camera import CameraGroup
 from support import *
 from tile import Tile
 from ui import UI
+from npc import NPC
 
 class Game:
     def __init__(self):
@@ -25,8 +26,10 @@ class Game:
 
         self.createMap()
         
-        p1Pos = (175,100)
+        p1Pos = (240,130)
         self.player = Player(p1Pos,self.visibleSprites,self.collisionSprites,self.interactableSprites)
+
+        NPC("Sprites/StoreClerk.png",(238,58),self.visibleSprites)
 
         fontPath = "Fonts/DeterminationMonoWebRegular-Z5oq.ttf"
         self.fontColor = (255,255,255)
@@ -79,8 +82,6 @@ class Game:
             self.displayFPS()
             pg.display.update()
             self.clock.tick(self.FPS)
-
-
 
 if __name__ == "__main__":
     game = Game()

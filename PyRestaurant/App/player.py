@@ -104,7 +104,6 @@ class Player(pg.sprite.Sprite):
             self.idleState()
 
     def update(self):
-
         self.handleInputs()
         self.handleAnimation()
         self.handleMovement()

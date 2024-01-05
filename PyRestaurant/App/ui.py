@@ -3,7 +3,6 @@ from timer import Timer
 from support import loadSprite
 from views import addOrder
 
-
 class UI:
     def __init__(self):
         self.screen = pg.display.get_surface()
@@ -72,9 +71,6 @@ class UI:
                    addOrder(key)
                    self.timer.activate()
              
-
-
-
     def renderPurchaseButton(self):
          btnX = 530
          btnY = 430
