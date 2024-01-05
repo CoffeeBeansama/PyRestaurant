@@ -1,8 +1,8 @@
 # Django Pygame Integration
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Django](https://img.shields.io/badge/Django-3.2-green.svg)](https://www.djangoproject.com/)
-[![Pygame](https://img.shields.io/badge/Pygame-2.0-red.svg)](https://www.pygame.org/)
+[![Django](https://img.shields.io/badge/Django-4.2-green.svg)](https://www.djangoproject.com/)
+[![Pygame](https://img.shields.io/badge/Pygame-2.4-red.svg)](https://www.pygame.org/)
 
 ## Overview
 
@@ -18,6 +18,6 @@ This repository demonstrates how to integrate Pygame with Django, allowing you t
 
 Before you begin, ensure you have the following installed:
 
-- Python 3.x
-- Django 3.2
-- Pygame 2.0
+- Python 3.11
+- Django 4.2
+- Pygame 2.4
