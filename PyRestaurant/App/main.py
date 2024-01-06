@@ -9,6 +9,7 @@ from support import *
 from tile import Tile
 from ui import UI
 from npc import NPC
+from login import LoginScreen
 
 class Game:
     def __init__(self):
@@ -23,9 +24,20 @@ class Game:
         self.visibleSprites = CameraGroup()
         self.collisionSprites = pg.sprite.Group()
         self.interactableSprites = pg.sprite.Group()
+        
 
+        self.loginScreen = LoginScreen()
         self.createMap()
         
+        self.currentScene = Scenes.LoginScreen
+        
+        self.scenes = {
+            Scenes.Overworld : self.handleOverworldUpdates,
+            Scenes.LoginScreen : self.loginScreen.update,
+
+        }
+
+
         p1Pos = (240,130)
         self.player = Player(p1Pos,self.visibleSprites,self.collisionSprites,self.interactableSprites)
 
@@ -64,6 +76,14 @@ class Game:
          pos = (670,10)
          self.window.blit(fps,pos)
 
+    def handleOverworldUpdates(self):
+        self.visibleSprites.custom_draw(self.player)
+        self.player.update()
+        self.ui.renderUI()
+
+    def handleLoginUpdates(self):
+        pass
+
     def run(self):
         while True:
             for event in pg.event.get():
@@ -73,11 +93,10 @@ class Game:
                     break
 
             self.window.fill("black")
-            EventHandler.handleKeyBoardInput() 
-
-            self.visibleSprites.custom_draw(self.player)
-            self.player.update()
-            self.ui.renderUI()
+            EventHandler.handlePlayerInput() 
+            
+            updateCurrentScene = self.scenes.get(self.currentScene)
+            updateCurrentScene()
 
             self.displayFPS()
             pg.display.update()

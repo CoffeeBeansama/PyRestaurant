@@ -2,6 +2,8 @@ import pygame as pg
 from timer import Timer
 from support import loadSprite
 from views import addOrder
+from eventhandler import EventHandler
+
 
 class UI:
     def __init__(self):
@@ -37,7 +39,7 @@ class UI:
             self.itemSlots[item]["Sprite"] = loadSprite(f"Sprites/{item.lower()}.png",itemSpriteSize).convert_alpha()
             self.itemSlots[item]["Y"] = y
             white = (255,255,255)
-            self.itemSlots[item]["Text"] = self.font.render(f"Order: {str(item)}",True,white)
+            self.itemSlots[item]["Text"] = self.font.render(f"Order: {str(item)}",True,self.white)
         
 
     def initializeButtonColours(self):
@@ -48,16 +50,14 @@ class UI:
         self.buttonColor = self.black
 
     def handleMouseEvent(self):
-         mousePos = pg.mouse.get_pos()
-         mousePressed = pg.mouse.get_pressed()
 
-         if self.readyButton.collidepoint(mousePos):
-              self.buttonColor = self.white
-              self.fontColor = self.black
-              if mousePressed[0] and not self.timer.activated:
-                    self.renderInventory = True if not self.renderInventory else False
-                    self.timer.activate()
-                    self.fontColor = self.yellow
+         if self.readyButton.collidepoint(EventHandler.mousePosition()):
+             self.buttonColor = self.white
+             self.fontColor = self.black
+             if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
+                self.renderInventory = True if not self.renderInventory else False
+                self.timer.activate()
+                self.fontColor = self.yellow
          else:
               self.buttonColor = self.black
               self.fontColor = self.white
@@ -65,8 +65,8 @@ class UI:
          for key,items in self.itemSlots.items():
              if not "Button" in self.itemSlots[key]: return # check if button exist first
 
-             if self.itemSlots[key]["Button"].collidepoint(mousePos):
-                if mousePressed[0] and not self.timer.activated:
+             if self.itemSlots[key]["Button"].collidepoint(EventHandler.mousePosition()):
+                if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
                    print(f"Pressed the button on {key}")
                    addOrder(key)
                    self.timer.activate()
@@ -89,8 +89,8 @@ class UI:
         invY = 50
         invWidth = 470
         invHeight = 360
-        invBGColor = (255,255,255)
-        invColor = (0,0,0)
+        invBGColor = self.black
+        invColor = self.white
         pg.draw.rect(self.screen,invBGColor,(invX,invY,invWidth,invHeight))
         pg.draw.rect(self.screen,invColor,(invX+5,invY+5,invWidth-10,invHeight-10))
         
