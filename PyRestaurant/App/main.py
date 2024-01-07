@@ -9,7 +9,7 @@ from support import *
 from tile import Tile
 from ui import UI
 from npc import NPC
-from login import LoginScreen
+from menu import MainMenu
 
 class Game:
     def __init__(self):
@@ -26,7 +26,7 @@ class Game:
         self.interactableSprites = pg.sprite.Group()
         
 
-        self.loginScreen = LoginScreen()
+        self.loginScreen = MainMenu()
         self.createMap()
         
         self.currentScene = Scenes.LoginScreen
