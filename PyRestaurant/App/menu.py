@@ -34,6 +34,8 @@ class MainMenu:
 
         self.buttonTextPos = 250
 
+        self.submitButtonYPos = 270
+
         self.mainScreenButtonData = ["Create User","Login","Settings","Quit Game"]
         self.playerScreenButtonData = ["Username","Password"]
         
@@ -45,6 +47,9 @@ class MainMenu:
         self.createButtonUI(self.mainScreenButtonData,"Main Screen")
         self.createButtonUI(self.playerScreenButtonData,"Create User")
         
+        self.submitText = self.font.render("Submit",True,self.white)
+        self.backText = self.font.render("Back",True,self.white)
+
     def initializeButtonEvents(self):
         self.buttonEvents = {
             "Create User" : self.createUserEventClicked,
@@ -93,6 +98,7 @@ class MainMenu:
             self.screen.blit(value["Text"],(self.buttonPosX+20,value["Y"]+10))
     
     def createUserScreen(self):
+        # Username and Password
         for key,value in self.screenButtons["Create User"].items():
             # Background
             pg.draw.rect(self.screen,self.white,
@@ -104,6 +110,35 @@ class MainMenu:
                           self.buttonWidth-10,self.buttonHeight-10))
             # Text
             self.screen.blit(value["Text"],(self.buttonPosX+20,value["Y"]+10))
+        
+        # Submit and back
+
+        # Submit
+        # Background
+        pg.draw.rect(self.screen,self.white,
+                    (self.buttonPosX,self.submitButtonYPos,
+                    self.buttonWidth//2,self.buttonHeight))
+
+        # Button
+        self.createSubmitButton = pg.draw.rect(self.screen,self.black,
+                    (self.buttonPosX+5,self.submitButtonYPos+5,
+                    (self.buttonWidth-20)//2,self.buttonHeight-10))
+        # Text
+        self.screen.blit(self.submitText,(self.buttonPosX+20,self.submitButtonYPos+10))
+
+        # Back
+        # Background
+        pg.draw.rect(self.screen,self.white,
+                    ((self.buttonPosX+(self.buttonWidth//2))+10,self.submitButtonYPos,
+                    (self.buttonWidth//2)-10,self.buttonHeight))
+
+        # Button
+        self.createSubmitButton = pg.draw.rect(self.screen,self.black,
+                    ((self.buttonPosX+(self.buttonWidth//2))+15,self.submitButtonYPos+5,
+                    (self.buttonWidth//2)-20,self.buttonHeight-10))
+        # Text
+        self.screen.blit(self.backText,(self.buttonPosX+(self.buttonWidth//2)+30,
+                                        self.submitButtonYPos+10))
 
     # Button Events
     def createUserEventClicked(self):
