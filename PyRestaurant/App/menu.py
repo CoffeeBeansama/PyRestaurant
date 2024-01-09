@@ -1,7 +1,7 @@
 import pygame as pg
 from timer import Timer
 from eventhandler import EventHandler
-from settings import MenuScreen
+from settings import *
 
 class MainMenu:
     def __init__(self):
@@ -35,29 +35,26 @@ class MainMenu:
         self.buttonTextPos = 250
 
         self.submitButtonYPos = 270
-
-        self.mainScreenButtonData = ["Create User","Login","Settings","Quit Game"]
-        self.playerScreenButtonData = ["Username","Password"]
         
         self.screenButtons = {
-            "Main Screen" : {},
-            "Create User" : {},
+            MenuScreen.Main : {},
+            MenuScreen.CreateUser : {},
         }
         
-        self.createButtonUI(self.mainScreenButtonData,"Main Screen")
-        self.createButtonUI(self.playerScreenButtonData,"Create User")
+        self.createButtonUI(MainScreenButtons,MenuScreen.Main)
+        self.createButtonUI(CreateUserScreenButtons,MenuScreen.CreateUser)
         
         self.submitText = self.font.render("Submit",True,self.white)
         self.backText = self.font.render("Back",True,self.white)
 
     def initializeButtonEvents(self):
         self.buttonEvents = {
-            "Create User" : self.createUserEventClicked,
-            "Login" : self.loginUserEventClicked,
-            "Settings" : self.settingEventClicked,
-            "Quit Game" : self.quitEventClicked,
-            "Username" : self.userNameOrPasswordEventClicked,
-            "Password" : self.userNameOrPasswordEventClicked
+            MainScreenButtons.CreateUser : self.createUserEventClicked,
+            MainScreenButtons.Login : self.loginUserEventClicked,
+            MainScreenButtons.Settings : self.settingEventClicked,
+            MainScreenButtons.QuitGame : self.quitEventClicked,
+            CreateUserScreenButtons.Username : self.userNameOrPasswordEventClicked,
+            CreateUserScreenButtons.Password : self.userNameOrPasswordEventClicked
         }
 
     def createButtonUI(self,data,buttonUI):
@@ -66,7 +63,7 @@ class MainMenu:
             y = self.buttonStartPosY + (index * yOffset)
             self.screenButtons[buttonUI][item] = {}
             self.screenButtons[buttonUI][item]["Y"] = y
-            self.screenButtons[buttonUI][item]["Text"] = self.font.render(str(item),True,self.white)
+            self.screenButtons[buttonUI][item]["Text"] = self.font.render(str(item.value),True,self.white)
             self.screenButtons[buttonUI][item]["Event"] = self.buttonEvents[item]
 
 
@@ -84,13 +81,13 @@ class MainMenu:
     
     # Screens
     def mainScreen(self):
-        for key,value in self.screenButtons["Main Screen"].items():
+        for key,value in self.screenButtons[MenuScreen.Main].items():
             # Background
             pg.draw.rect(self.screen,self.white,
                          (self.buttonPosX,value["Y"],
                           self.buttonWidth,self.buttonHeight))
             # Button
-            self.screenButtons["Main Screen"][key]["Button"] = pg.draw.rect(self.screen,self.black,
+            self.screenButtons[MenuScreen.Main][key]["Button"] = pg.draw.rect(self.screen,self.black,
                          (self.buttonPosX+5,value["Y"]+5,
                           self.buttonWidth-10,self.buttonHeight-10))
 
@@ -99,13 +96,13 @@ class MainMenu:
     
     def createUserScreen(self):
         # Username and Password
-        for key,value in self.screenButtons["Create User"].items():
+        for key,value in self.screenButtons[MenuScreen.CreateUser].items():
             # Background
             pg.draw.rect(self.screen,self.white,
                          (self.buttonPosX,value["Y"],
                           self.buttonWidth,self.buttonHeight))
             # Button
-            self.screenButtons["Create User"][key]["Button"] = pg.draw.rect(self.screen,self.black,
+            self.screenButtons[MenuScreen.CreateUser][key]["Button"] = pg.draw.rect(self.screen,self.black,
                          (self.buttonPosX+5,value["Y"]+5,
                           self.buttonWidth-10,self.buttonHeight-10))
             # Text
