@@ -3,7 +3,8 @@ from . import models
 
 # Register your models here.
 modelList = [
-    models.Order
+    models.Order,
+    models.User
 
 ]
 

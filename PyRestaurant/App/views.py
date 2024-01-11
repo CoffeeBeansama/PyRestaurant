@@ -12,7 +12,7 @@ sys.path.append(django_project_path)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "PyRestaurant.settings")
 django.setup()
 
-from App.models import Order
+from App.models import Order,User
 
 # Create your views here.
 def greet(request):
@@ -26,6 +26,10 @@ def homePage(request):
     }
     return HttpResponse(template.render(context,request))
 
+def addNewUser(username,password):
+    newUser = User(username=username,password=password)
+    newUser.save()
+    print(f"New User Added: {username}")
 
 def addOrder(orderName):
     newOrder = Order(name=orderName)
