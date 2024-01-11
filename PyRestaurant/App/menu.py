@@ -79,64 +79,39 @@ class MainMenu:
         renderCurrentScreen = self.menuScreens.get(self.currentRendering)
         renderCurrentScreen()
     
+    def drawButton(self, xPos, yPos, width, height, text):
+        # Background
+        pg.draw.rect(self.screen, self.white, (xPos, yPos, width, height))
+    
+        # Button
+        button_rect = pg.draw.rect(self.screen, self.black, (xPos + 5, yPos + 5, width - 10, height - 10))
+    
+        # Text
+        self.screen.blit(text, (xPos + 20, yPos + 10))
+    
+        return button_rect
+
     # Screens
     def mainScreen(self):
-        for key,value in self.screenButtons[MenuScreen.Main].items():
-            # Background
-            pg.draw.rect(self.screen,self.white,
-                         (self.buttonPosX,value["Y"],
-                          self.buttonWidth,self.buttonHeight))
-            # Button
-            self.screenButtons[MenuScreen.Main][key]["Button"] = pg.draw.rect(self.screen,self.black,
-                         (self.buttonPosX+5,value["Y"]+5,
-                          self.buttonWidth-10,self.buttonHeight-10))
+        for key, value in self.screenButtons[MenuScreen.Main].items():
+            button_rect = self.drawButton(self.buttonPosX, value["Y"], self.buttonWidth, self.buttonHeight, value["Text"])
+            self.screenButtons[MenuScreen.Main][key]["Button"] = button_rect
 
-            # Text
-            self.screen.blit(value["Text"],(self.buttonPosX+20,value["Y"]+10))
-    
     def createUserScreen(self):
         # Username and Password
-        for key,value in self.screenButtons[MenuScreen.CreateUser].items():
-            # Background
-            pg.draw.rect(self.screen,self.white,
-                         (self.buttonPosX,value["Y"],
-                          self.buttonWidth,self.buttonHeight))
-            # Button
-            self.screenButtons[MenuScreen.CreateUser][key]["Button"] = pg.draw.rect(self.screen,self.black,
-                         (self.buttonPosX+5,value["Y"]+5,
-                          self.buttonWidth-10,self.buttonHeight-10))
-            # Text
-            self.screen.blit(value["Text"],(self.buttonPosX+20,value["Y"]+10))
-        
-        # Submit and back
+        for key, value in self.screenButtons[MenuScreen.CreateUser].items():
+            button_rect = self.drawButton(self.buttonPosX, value["Y"], self.buttonWidth, self.buttonHeight, value["Text"])
+            self.screenButtons[MenuScreen.CreateUser][key]["Button"] = button_rect
 
         # Submit
-        # Background
-        pg.draw.rect(self.screen,self.white,
-                    (self.buttonPosX,self.submitButtonYPos,
-                    self.buttonWidth//2,self.buttonHeight))
-
-        # Button
-        self.createSubmitButton = pg.draw.rect(self.screen,self.black,
-                    (self.buttonPosX+5,self.submitButtonYPos+5,
-                    (self.buttonWidth-20)//2,self.buttonHeight-10))
-        # Text
-        self.screen.blit(self.submitText,(self.buttonPosX+20,self.submitButtonYPos+10))
+        submit_button_rect = self.drawButton(self.buttonPosX, self.submitButtonYPos, self.buttonWidth // 2, self.buttonHeight, self.submitText)
+        self.createSubmitButton = submit_button_rect
 
         # Back
-        # Background
-        pg.draw.rect(self.screen,self.white,
-                    ((self.buttonPosX+(self.buttonWidth//2))+10,self.submitButtonYPos,
-                    (self.buttonWidth//2)-10,self.buttonHeight))
-
-        # Button
-        self.createSubmitButton = pg.draw.rect(self.screen,self.black,
-                    ((self.buttonPosX+(self.buttonWidth//2))+15,self.submitButtonYPos+5,
-                    (self.buttonWidth//2)-20,self.buttonHeight-10))
-        # Text
-        self.screen.blit(self.backText,(self.buttonPosX+(self.buttonWidth//2)+30,
-                                        self.submitButtonYPos+10))
-
+        back_button_rect = self.drawButton(self.buttonPosX + (self.buttonWidth // 2) + 10, self.submitButtonYPos,
+                                       (self.buttonWidth // 2) - 10, self.buttonHeight, self.backText)
+        self.createBackButton = back_button_rect
+        
     # Button Events
     def createUserEventClicked(self):
         self.currentRendering = MenuScreen.CreateUser
