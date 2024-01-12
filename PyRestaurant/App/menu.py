@@ -15,7 +15,7 @@ class MainMenu:
         self.font = pg.font.Font(fontPath,34)
         self.fontColor = self.black
         self.timer = Timer(300)
-        self.textFieldTimer = Timer(200)        
+        self.textFieldTimer = Timer(170)        
         self.currentRendering = MenuScreen.Main
 
         self.menuScreens = {
@@ -139,29 +139,58 @@ class MainMenu:
     
     def settingEventClicked(self):
         pass
-
+    
     def textFieldClicked(self):
-        self.startInputField = True
-
-    def quitEventClicked(self):
         pass
     
-    def handleInputFieldEvent(self):
-        if not self.startInputField: return
+    def quitEventClicked(self):
+        pass
 
-        keys = pg.key.get_pressed()
-        
+
+    def handleInputFieldEvents(self):
         for textField in self.screenButtons[MenuScreen.CreateUser].values():
+            if not "FieldActive" in textField: return
+            
+            # Checks if mouse is still on the input field
+            # Disables getting letters if mouse is outside the input field
+            if "Button" in textField:
+               if not textField["Button"].collidepoint(EventHandler.mousePosition()):
+                  textField["FieldActive"] = False
+
+            # Checks if input field is active
+            # Loop through the keyboard keys (a-z) and (0-9)
+            # converts any key pressed to character strings
             if textField["FieldActive"]:
                for key in range(pg.K_a, pg.K_z + 1):
-                   if keys[key] and not self.textFieldTimer.activated:
+                   if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
                       textField["InputText"] += chr(key)
                       self.textFieldTimer.activate()
                for key in range(pg.K_0, pg.K_9 + 1):
-                   if keys[key] and not self.textFieldTimer.activated:
+                   if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
                       textField["InputText"] += chr(key)
                       self.textFieldTimer.activate()
 
+               # Handles text deletion
+               if EventHandler.keyboardKeys()[pg.K_BACKSPACE] and not self.textFieldTimer.activated:
+                  textField["InputText"] = textField["InputText"][:-1]
+                  self.textFieldTimer.activate()
+
+    def handleCreateUserSubmitButtonEvent(self):
+        if self.createSubmitButton:
+           if self.buttonPressed(self.createSubmitButton):
+              usernameField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreateUserField]
+              passwordField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreatePasswordField]
+
+              # Creates and adds new user
+              addNewUser(usernameField["InputText"],passwordField["InputText"])
+
+              self.timer.activate()
+    
+    def buttonPressed(self,button):
+        if button.collidepoint(EventHandler.mousePosition()):
+           if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
+              return True
+           return False
 
     def handlePlayerInput(self):
         for menuButton, screenButton in self.screenButtons.items():
@@ -169,31 +198,23 @@ class MainMenu:
                 if "Button" in buttonUI and "Event" in buttonUI:
                     button = buttonUI["Button"]
                     function = buttonUI["Event"]
-                    if button.collidepoint(EventHandler.mousePosition()):
-                        if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
-                            if buttonName in [CreateUserScreenButtons.CreateUserField,CreateUserScreenButtons.CreatePasswordField]:
-                                screenButton[buttonName]["Text"] = self.font.render("|",True,self.white)
-                                screenButton[buttonName]["InputText"] = ""
-                                screenButton[buttonName]["FieldActive"] = True
-                            function()
-                            self.timer.activate()
-                    else:
-                        if "FieldActive" in buttonUI:
-                           if buttonUI["FieldActive"]:
-                              buttonUI["FieldActive"] = False
-        
-        if not self.createSubmitButton: return
-        if self.createSubmitButton.collidepoint(EventHandler.mousePosition()):
-           if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
-              usernameField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreateUserField]
-              passwordField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreatePasswordField]
-              addNewUser(usernameField["InputText"],passwordField["InputText"])
-              self.timer.activate()
+                    if self.buttonPressed(button):
+                       self.handleTextFieldClickedEvent(buttonName,screenButton)
+                       function()
+                       self.timer.activate()
+
+        self.handleInputFieldEvents()
+        self.handleCreateUserSubmitButtonEvent()
+
+
+    def handleTextFieldClickedEvent(self,buttonName,buttonUI):
+        if buttonName in [CreateUserScreenButtons.CreateUserField,CreateUserScreenButtons.CreatePasswordField]:
+           buttonUI[buttonName]["Text"] = self.font.render("|",True,self.white)
+           buttonUI[buttonName]["InputText"] = ""
+           buttonUI[buttonName]["FieldActive"] = True
 
     def update(self):
         self.timer.update()
         self.textFieldTimer.update()
         self.handleRendering()
-        self.handleInputFieldEvent()
         self.handlePlayerInput()
-
