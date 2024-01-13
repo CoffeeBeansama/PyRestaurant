@@ -26,7 +26,7 @@ class Game:
         self.interactableSprites = pg.sprite.Group()
         
 
-        self.loginScreen = MainMenu()
+        self.loginScreen = MainMenu(self.startOverworld)
         self.createMap()
         
         self.currentScene = Scenes.LoginScreen
@@ -79,10 +79,10 @@ class Game:
     def handleOverworldUpdates(self):
         self.visibleSprites.custom_draw(self.player)
         self.player.update()
-        self.ui.renderUI()
+        self.ui.renderUI()  
 
-    def handleLoginUpdates(self):
-        pass
+    def startOverworld(self):
+        self.currentScene = Scenes.Overworld
 
     def run(self):
         while True:

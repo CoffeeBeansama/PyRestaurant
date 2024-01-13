@@ -4,7 +4,7 @@ from . import models
 # Register your models here.
 modelList = [
     models.Order,
-    models.User
+    models.Customer
 
 ]
 

@@ -89,8 +89,8 @@ class UI:
         invY = 50
         invWidth = 470
         invHeight = 360
-        invBGColor = self.black
-        invColor = self.white
+        invBGColor = self.white
+        invColor = self.black
         pg.draw.rect(self.screen,invBGColor,(invX,invY,invWidth,invHeight))
         pg.draw.rect(self.screen,invColor,(invX+5,invY+5,invWidth-10,invHeight-10))
         

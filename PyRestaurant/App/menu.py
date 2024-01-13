@@ -5,8 +5,9 @@ from settings import *
 from views import addNewUser
 
 class MainMenu:
-    def __init__(self):
+    def __init__(self,startOverworld):
         self.screen = pg.display.get_surface()
+        self.startOverworld = startOverworld
 
         self.black = (0,0,0)
         self.white = (255,255,255)
@@ -183,8 +184,9 @@ class MainMenu:
 
               # Creates and adds new user
               addNewUser(usernameField["InputText"],passwordField["InputText"])
-
+                    
               self.timer.activate()
+              self.startOverworld()
     
     def buttonPressed(self,button):
         if button.collidepoint(EventHandler.mousePosition()):
