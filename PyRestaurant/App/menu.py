@@ -2,7 +2,7 @@ import pygame as pg
 from timer import Timer
 from eventhandler import EventHandler
 from settings import *
-from views import addNewUser
+from views import addNewCustomer
 
 class MainMenu:
     def __init__(self,startOverworld):
@@ -24,6 +24,8 @@ class MainMenu:
             MenuScreen.CreateUser : self.createUserScreen
         }
         
+        self.newPlayer = None
+
         self.initializeButtonEvents()
         self.initializeButtons()
         
@@ -183,16 +185,18 @@ class MainMenu:
               passwordField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreatePasswordField]
 
               # Creates and adds new user
-              addNewUser(usernameField["InputText"],passwordField["InputText"])
-                    
+              self.newPlayer = addNewCustomer(usernameField["InputText"],passwordField["InputText"])
               self.timer.activate()
               self.startOverworld()
-    
+        
     def buttonPressed(self,button):
         if button.collidepoint(EventHandler.mousePosition()):
            if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
               return True
            return False
+
+    def currentPlayer(self):
+        return self.newPlayer
 
     def handlePlayerInput(self):
         for menuButton, screenButton in self.screenButtons.items():

@@ -18,7 +18,7 @@ class CreateUserScreenButtons(Enum):
 
 class Scenes(Enum):
     Overworld = "Overworld"
-    LoginScreen = "Login"
+    MenuScreen = "MenuScreen"
 
 class MapTiles(Enum):
     Walls = 1

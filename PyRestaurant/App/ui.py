@@ -8,8 +8,9 @@ from eventhandler import EventHandler
 class UI:
     def __init__(self):
         self.screen = pg.display.get_surface()
+        self.player = None
         self.initializeButtonColours()
-
+        
         fontPath = "Fonts/DeterminationMonoWebRegular-Z5oq.ttf"
         self.font = pg.font.Font(fontPath,34)
         self.fontColor = self.black
@@ -68,7 +69,7 @@ class UI:
              if self.itemSlots[key]["Button"].collidepoint(EventHandler.mousePosition()):
                 if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
                    print(f"Pressed the button on {key}")
-                   addOrder(key)
+                   addOrder(key,self.player)
                    self.timer.activate()
              
     def renderPurchaseButton(self):
@@ -107,6 +108,7 @@ class UI:
             
             # sprite
             self.screen.blit(item["Sprite"],(self.itemSpriteXPos,item["Y"]))
+
             
     def renderUI(self):
         self.timer.update()

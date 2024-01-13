@@ -26,17 +26,16 @@ class Game:
         self.interactableSprites = pg.sprite.Group()
         
 
-        self.loginScreen = MainMenu(self.startOverworld)
+        self.menuScreen = MainMenu(self.startOverworld)
         self.createMap()
         
-        self.currentScene = Scenes.LoginScreen
+        self.currentScene = Scenes.MenuScreen
         
         self.scenes = {
             Scenes.Overworld : self.handleOverworldUpdates,
-            Scenes.LoginScreen : self.loginScreen.update,
+            Scenes.MenuScreen : self.menuScreen.update,
 
         }
-
 
         p1Pos = (240,130)
         self.player = Player(p1Pos,self.visibleSprites,self.collisionSprites,self.interactableSprites)
@@ -83,6 +82,7 @@ class Game:
 
     def startOverworld(self):
         self.currentScene = Scenes.Overworld
+        self.ui.player = self.menuScreen.currentPlayer()
 
     def run(self):
         while True:
@@ -97,7 +97,7 @@ class Game:
             
             updateCurrentScene = self.scenes.get(self.currentScene)
             updateCurrentScene()
-
+            
             self.displayFPS()
             pg.display.update()
             self.clock.tick(self.FPS)

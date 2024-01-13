@@ -14,6 +14,7 @@ django.setup()
 
 from App.models import Order,Customer
 
+
 # Create your views here.
 def greet(request):
     return HttpResponse(loader.get_template("html/greet.html").render({},request))
@@ -29,9 +30,9 @@ def homePage(request):
 def addNewCustomer(username,password):
     newCustomer = Customer(username=username,password=password)
     newCustomer.save()
-    print(f"New User Added: {username}")
+    return newCustomer
 
-def addOrder(orderName):
-    newOrder = Order(name=orderName)
+def addOrder(orderName,customer):
+    newOrder = Order(name=orderName,customer=customer)
     newOrder.save()
     print(f"Order Added: {orderName}")
