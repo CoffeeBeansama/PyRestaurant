@@ -27,6 +27,10 @@ def homePage(request):
     }
     return HttpResponse(template.render(context,request))
 
+
+def loginPage(request):
+    return HttpResponse(loader.get_template("html/login.html").render({},request))
+
 def addNewCustomer(username,password):
     newCustomer = Customer(username=username,password=password)
     newCustomer.save()
