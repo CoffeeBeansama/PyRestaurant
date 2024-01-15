@@ -149,6 +149,12 @@ class MainMenu:
     def quitEventClicked(self):
         pass
 
+    def getKeyboardPressed(self,textField,keys):
+        for key in keys:
+            if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
+               textField["InputText"] += chr(key)
+               self.textFieldTimer.activate()
+
 
     def handleInputFieldEvents(self):
         for textField in self.screenButtons[MenuScreen.CreateUser].values():
@@ -164,14 +170,12 @@ class MainMenu:
             # Loop through the keyboard keys (a-z) and (0-9)
             # converts any key pressed to character strings
             if textField["FieldActive"]:
-               for key in range(pg.K_a, pg.K_z + 1):
-                   if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
-                      textField["InputText"] += chr(key)
-                      self.textFieldTimer.activate()
-               for key in range(pg.K_0, pg.K_9 + 1):
-                   if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
-                      textField["InputText"] += chr(key)
-                      self.textFieldTimer.activate()
+               
+               mainAlphaKeys = range(pg.K_a,pg.K_z + 1)
+               mainNumberKeys = range(pg.K_0,pg.K_9 + 1)
+
+               self.getKeyboardPressed(textField,mainAlphaKeys)
+               self.getKeyboardPressed(textField,mainNumberKeys)
 
                # Handles text deletion
                if EventHandler.keyboardKeys()[pg.K_BACKSPACE] and not self.textFieldTimer.activated:
