@@ -26,6 +26,9 @@ class MainMenu:
         
         self.newPlayer = None
 
+        self.mainAlphaKeys = range(pg.K_a,pg.K_z + 1)
+        self.mainNumberKeys = range(pg.K_0,pg.K_9 + 1)               
+
         self.initializeButtonEvents()
         self.initializeButtons()
         
@@ -149,11 +152,19 @@ class MainMenu:
     def quitEventClicked(self):
         pass
 
+    def isCapsLockOn(self):
+        mods = pg.key.get_mods()    
+        return mods & pg.KMOD_CAPS
+    
     def getKeyboardPressed(self,textField,keys):
         for key in keys:
             if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
-               textField["InputText"] += chr(key)
                self.textFieldTimer.activate()
+               if self.isCapsLockOn():
+                  textField["InputText"] += chr(key).upper()
+               else:
+                  textField["InputText"] += chr(key).lower()
+               return
 
 
     def handleInputFieldEvents(self):
@@ -171,16 +182,15 @@ class MainMenu:
             # converts any key pressed to character strings
             if textField["FieldActive"]:
                
-               mainAlphaKeys = range(pg.K_a,pg.K_z + 1)
-               mainNumberKeys = range(pg.K_0,pg.K_9 + 1)
-
-               self.getKeyboardPressed(textField,mainAlphaKeys)
-               self.getKeyboardPressed(textField,mainNumberKeys)
-
                # Handles text deletion
                if EventHandler.keyboardKeys()[pg.K_BACKSPACE] and not self.textFieldTimer.activated:
                   textField["InputText"] = textField["InputText"][:-1]
                   self.textFieldTimer.activate()
+            
+               self.getKeyboardPressed(textField,self.mainAlphaKeys)
+               self.getKeyboardPressed(textField,self.mainNumberKeys)
+
+
 
     def handleCreateUserSubmitButtonEvent(self):
         if self.createSubmitButton:
