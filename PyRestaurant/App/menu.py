@@ -157,6 +157,11 @@ class MainMenu:
         return mods & pg.KMOD_CAPS
     
     def getKeyboardPressed(self,textField,keys):
+        if EventHandler.keyboardKeys()[pg.K_SPACE] and not self.textFieldTimer.activated:
+           self.textFieldTimer.activate()
+           textField["InputText"] += str(" ")
+           return
+
         for key in keys:
             if EventHandler.keyboardKeys()[key] and not self.textFieldTimer.activated:
                self.textFieldTimer.activate()
@@ -165,6 +170,7 @@ class MainMenu:
                else:
                   textField["InputText"] += chr(key).lower()
                return
+         
 
 
     def handleInputFieldEvents(self):
