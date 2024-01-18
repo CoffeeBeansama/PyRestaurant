@@ -2,7 +2,7 @@ import pygame as pg
 from timer import Timer
 from eventhandler import EventHandler
 from settings import *
-from views import addNewCustomer
+from views import addNewCustomer,customerExists
 
 class MainMenu:
     def __init__(self,startOverworld):
@@ -21,7 +21,9 @@ class MainMenu:
 
         self.menuScreens = {
             MenuScreen.Main : self.mainScreen,
-            MenuScreen.CreateUser : self.createUserScreen
+            MenuScreen.CreateUser : self.createUserScreen,
+            MenuScreen.Login : self.loginUserScreen,
+
         }
         
         self.newPlayer = None
@@ -50,13 +52,15 @@ class MainMenu:
         }
         
         self.createButtonUI(MainScreenButtons,MenuScreen.Main)
-        self.createButtonUI(CreateUserScreenButtons,MenuScreen.CreateUser)
+        self.createButtonUI(UserInfo,MenuScreen.CreateUser)
+
         self.submitText = self.font.render("Submit",True,self.white)
         self.backText = self.font.render("Back",True,self.white)
         
         self.startInputField = False
         
-        self.createSubmitButton = None
+        self.submitButton = None
+        self.backButton = None
 
     def initializeButtonEvents(self):
         self.buttonEvents = {
@@ -64,8 +68,8 @@ class MainMenu:
             MainScreenButtons.Login : self.loginUserEventClicked,
             MainScreenButtons.Settings : self.settingEventClicked,
             MainScreenButtons.QuitGame : self.quitEventClicked,
-            CreateUserScreenButtons.CreateUserField : self.textFieldClicked,
-            CreateUserScreenButtons.CreatePasswordField : self.textFieldClicked
+            UserInfo.Username : self.textFieldClicked,
+            UserInfo.Password : self.textFieldClicked
         }
 
     def createButtonUI(self,data,buttonUI):
@@ -120,12 +124,25 @@ class MainMenu:
                                                                                        self.buttonWidth, self.buttonHeight, value["Text"])
 
         # Submit
-        self.createSubmitButton = self.drawButton(self.buttonPosX, self.submitButtonYPos, self.buttonWidth // 2, self.buttonHeight, self.submitText)
+        self.submitButton = self.drawButton(self.buttonPosX, self.submitButtonYPos, self.buttonWidth // 2, self.buttonHeight, self.submitText)
 
         # Back
-        self.createBackButton = self.drawButton(self.buttonPosX + (self.buttonWidth // 2) + 10, self.submitButtonYPos,
+        self.backButton = self.drawButton(self.buttonPosX + (self.buttonWidth // 2) + 10, self.submitButtonYPos,
                                        (self.buttonWidth // 2) - 10, self.buttonHeight, self.backText)
         
+
+    def loginUserScreen(self):
+        # Username and Password
+        for key, value in self.screenButtons[MenuScreen.CreateUser].items():
+            self.screenButtons[MenuScreen.CreateUser][key]["Button"] = self.drawButton(self.buttonPosX, value["Y"],
+                                                                                       self.buttonWidth, self.buttonHeight, value["Text"])
+
+        # Submit
+        self.submitButton = self.drawButton(self.buttonPosX, self.submitButtonYPos, self.buttonWidth // 2, self.buttonHeight, self.submitText)
+
+        # Back
+        self.backButton = self.drawButton(self.buttonPosX + (self.buttonWidth // 2) + 10, self.submitButtonYPos,
+                                       (self.buttonWidth // 2) - 10, self.buttonHeight, self.backText)
 
     # Button Events
     def createUserEventClicked(self):
@@ -134,14 +151,22 @@ class MainMenu:
         self.currentRendering = MenuScreen.CreateUser 
         
         
-        usernameField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreateUserField]
-        passwordField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreatePasswordField]
+        usernameField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Username]
+        passwordField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Password]
 
         usernameField["FieldActive"] = False
         passwordField["FieldActive"] = False
 
     def loginUserEventClicked(self):
-        pass
+        for buttons in self.screenButtons[MenuScreen.Main].values():
+            del buttons["Button"]
+        self.currentRendering = MenuScreen.Login 
+                
+        usernameField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Username]
+        passwordField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Password]
+
+        usernameField["FieldActive"] = False
+        passwordField["FieldActive"] = False
     
     def settingEventClicked(self):
         pass
@@ -198,17 +223,37 @@ class MainMenu:
 
 
 
-    def handleCreateUserSubmitButtonEvent(self):
-        if self.createSubmitButton:
-           if self.buttonPressed(self.createSubmitButton):
-              usernameField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreateUserField]
-              passwordField = self.screenButtons[MenuScreen.CreateUser][CreateUserScreenButtons.CreatePasswordField]
+    def handleSubmitButtonEvent(self):
+        if not self.submitButton: return
 
-              # Creates and adds new user
-              self.newPlayer = addNewCustomer(usernameField["InputText"],passwordField["InputText"])
-              self.timer.activate()
-              self.startOverworld()
+        usernameField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Username]
+        passwordField = self.screenButtons[MenuScreen.CreateUser][UserInfo.Password]
+
+        match self.currentRendering:
+            case MenuScreen.CreateUser:
+                 if self.buttonPressed(self.submitButton):
+                    # Creates and adds new user
+                    self.newPlayer = addNewCustomer(usernameField["InputText"],passwordField["InputText"])
+                    self.timer.activate()
+                    self.startOverworld()
+
+            case MenuScreen.Login:
+                 if self.buttonPressed(self.submitButton):                    
+                    if customerExists(usernameField["InputText"],passwordField["InputText"]):
+                       self.startOverworld()
+                    else:
+                       print("This account doesn't exits")
+                       print("Create an account or input the correct username and password")
+                    self.timer.activate()
+
+    def handleBackButtonEvent(self):
+        if not self.backButton: return
         
+        if self.currentRendering != MenuScreen.Main and self.buttonPressed(self.backButton):
+           for key,button in self.screenButtons[MenuScreen.CreateUser].items():
+               button["InputText"] = "Username" if key == UserInfo.Username else "Password"
+           self.currentRendering = MenuScreen.Main
+
     def buttonPressed(self,button):
         if button.collidepoint(EventHandler.mousePosition()):
            if EventHandler.pressingLeftMouseButton() and not self.timer.activated:
@@ -230,11 +275,12 @@ class MainMenu:
                        self.timer.activate()
 
         self.handleInputFieldEvents()
-        self.handleCreateUserSubmitButtonEvent()
+        self.handleSubmitButtonEvent()
+        self.handleBackButtonEvent()
 
 
     def handleTextFieldClickedEvent(self,buttonName,buttonUI):
-        if buttonName in [CreateUserScreenButtons.CreateUserField,CreateUserScreenButtons.CreatePasswordField]:
+        if buttonName in [UserInfo.Username,UserInfo.Password]:
            buttonUI[buttonName]["Text"] = self.font.render("|",True,self.white)
            buttonUI[buttonName]["InputText"] = ""
            buttonUI[buttonName]["FieldActive"] = True

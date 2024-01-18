@@ -12,9 +12,9 @@ class MainScreenButtons(Enum):
     Settings = "Settings"
     QuitGame = "Quit Game"
 
-class CreateUserScreenButtons(Enum):
-    CreateUserField = "Username"
-    CreatePasswordField = "Password"
+class UserInfo(Enum):
+    Username = "Username"
+    Password = "Password"
 
 class Scenes(Enum):
     Overworld = "Overworld"

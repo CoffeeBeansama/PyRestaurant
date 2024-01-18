@@ -36,6 +36,13 @@ def addNewCustomer(username,password):
     newCustomer.save()
     return newCustomer
 
+def customerExists(username,password):
+    try:
+        customer = Customer.objects.get(username=username,password=password)
+        return True
+    except Customer.DoesNotExist:
+        return False
+
 def addOrder(orderName,customer):
     newOrder = Order(name=orderName,customer=customer)
     newOrder.save()
