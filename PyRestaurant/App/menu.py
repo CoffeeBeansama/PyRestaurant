@@ -2,7 +2,7 @@ import pygame as pg
 from timer import Timer
 from eventhandler import EventHandler
 from settings import *
-from views import addNewCustomer,customerExists
+from views import addNewCustomer,customerExists,getCustomer
 
 class MainMenu:
     def __init__(self,startOverworld):
@@ -240,6 +240,7 @@ class MainMenu:
             case MenuScreen.Login:
                  if self.buttonPressed(self.submitButton):                    
                     if customerExists(usernameField["InputText"],passwordField["InputText"]):
+                       self.newPlayer = getCustomer(usernameField["InputText"],passwordField["InputText"])
                        self.startOverworld()
                     else:
                        print("This account doesn't exits")
