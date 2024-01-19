@@ -21,3 +21,6 @@ Before you begin, ensure you have the following installed:
 - Python 3.11
 - Django 4.2
 - Pygame 2.4
+
+## Sample Video
+[youtube.com](https://youtu.be/lazcBdH3w78?si=L6BjzErObuWPaRuw)
